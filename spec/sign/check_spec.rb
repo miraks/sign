@@ -91,4 +91,40 @@ describe "#signature" do
       end
     end
   end
+
+  it "lookups in ancestors chain" do
+    class Foo
+      sign 'Enumerable -> Array'
+      def bar enum
+        enum.to_a
+      end
+    end
+
+    expect(Foo.new.bar(a: 1, b: 2)).to eq [[:a, 1], [:b, 2]]
+  end
+
+  describe "strict check" do
+    before :each do
+      class Foo
+        sign '!Hash -> Array'
+        def bar hash
+          hash.to_a
+        end
+      end
+    end
+
+    it "raises error if subclass given" do
+      class MyHash < Hash
+      end
+
+      my_hash = MyHash.new
+      expect { Foo.new.bar(my_hash) }.to raise_error Sign::WrongType
+
+      Object.send :remove_const, :MyHash
+    end
+
+    it "returns method result if exactly expected type given" do
+      expect(Foo.new.bar(a: 1)).to eq [[:a, 1]]
+    end
+  end
 end
