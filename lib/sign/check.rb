@@ -34,8 +34,7 @@ module Sign
 
     def method_added name
       return if @current_sign.nil?
-      sign = @current_sign
-      @current_sign = nil
+      sign, @current_sign = @current_sign, nil
       add_sign sign, name
     end
   end
