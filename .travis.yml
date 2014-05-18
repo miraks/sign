@@ -1,0 +1,17 @@
+language: ruby
+cache: bundler
+
+rvm:
+  - 2.1.2
+  - 2.0.0
+  - jruby
+  - rbx
+
+script: 'bundle exec rake'
+
+notifications:
+  email:
+    recipients:
+      a@vldkn.net
+  on_failure: always
+  on_success: never
